@@ -6,9 +6,9 @@ const port = process.env.PORT || 3000
 app.use(express.static('public'))
 
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'index.html'));
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`agenda-spa app listening at http://localhost:${port}`)
 })
