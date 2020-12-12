@@ -7,11 +7,18 @@
     <link href="style.css" rel="stylesheet">
   </head>
   <body>
-    <nav class="nav">
-      <a href="/" class="nav__link" data-link>Home</a>
-      <a href="/posts" class="nav__link" data-link>Posts</a>
-      <a href="/settings" class="nav__link" data-link>Settings</a>
-    </nav>
+    <div class="topnav">
+      <a class="active" href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <div class="login-container">
+	<form method="post" action="/login">
+	  <input type="text" placeholder="Username" name="username">
+	  <input type="password" placeholder="Password" name="password">
+	  <input type="submit" value="Login">
+	</form>
+      </div>
+    </div> 
     <div id="app"></div>
     <h1>Agenda</h1>
   </body>
