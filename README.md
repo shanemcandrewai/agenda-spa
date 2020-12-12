@@ -37,3 +37,9 @@
 ##### [If heroku missing, add remote to local repository](https://devcenter.heroku.com/articles/git#creating-a-heroku-remote)
 #### [Deploy code](https://devcenter.heroku.com/articles/git#deploying-code)
     git push heroku master
+## Development
+### [List globally installed node packages](https://docs.npmjs.com/cli/v6/commands/npm-ls)
+    npm ls -g --depth=0
+### [Automatically restart app when file changes](https://www.npmjs.com/package/nodemon)
+    npm install -g nodemon
+    nodemon app.js
