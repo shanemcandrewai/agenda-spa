@@ -1,6 +1,6 @@
 # Agenda single page application
 ## Installation
-### Prequisites
+### Prerequisites
 #### Git
 ##### Linux
     sudo add-apt-repository ppa:git-core/ppa
@@ -9,7 +9,7 @@
 #### Node.js
 ##### Linux
 ##### [Download Linux Binaries (x64)](https://nodejs.org/en/download)
-##### [Unzip, install and set environmental variable](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux)
+##### [Unzip, install, set environmental variable and test installation](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux)
 ##### Update ~/.profile
     # Nodejs
     VERSION=v14.15.1
