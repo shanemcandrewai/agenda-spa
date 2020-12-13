@@ -1,3 +1,5 @@
+// https://github.com/expressjs/express/blob/master/examples/auth/index.js
+// https://stackoverflow.com/questions/65274084/what-is-purpose-assigning-an-error-message-to-req-session-error
 const express = require('express')
 const app = express()
 const path = require('path')
