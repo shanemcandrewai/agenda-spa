@@ -1,9 +1,48 @@
 const express = require('express')
 const app = express()
 const path = require('path')
+const session = require('express-session')
 const port = process.env.PORT || 3000 
 
 app.use(express.static('public'))
+
+app.use(express.urlencoded({ extended: false }))
+app.use(session({
+  resave: false, // don't save session if unmodified
+  saveUninitialized: false, // don't create session until something stored
+  secret: 'shhhh, very secret'
+}));
+
+app.use(function(req, res, next){
+  var err = req.session.error;
+  console.log('sss ', err)
+  var msg = req.session.success;
+  delete req.session.error;
+  delete req.session.success;
+  res.locals.message = '';
+  if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
+  if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
+  next();
+});
+
+var users = {
+  tj: { name: 'tj' }
+};
+
+function authenticate(name, pass, fn) {
+  if (!module.parent) console.log('authenticating %s:%s', name, pass);
+  var user = users[name];
+  // query the db for the given username
+  if (!user) return fn(new Error('cannot find user'));
+  // apply the same algorithm to the POSTed password, applying
+  // the hash against the pass / salt, if there is a match we
+  // found the user
+  hash({ password: pass, salt: user.salt }, function (err, pass, salt, hash) {
+    if (err) return fn(err);
+    if (hash === user.hash) return fn(null, user)
+    fn(new Error('invalid password'));
+  });
+}
 
 app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
@@ -28,7 +67,7 @@ app.post('/login', function(req, res){
       req.session.error = 'Authentication failed, please check your '
         + ' username and password.'
         + ' (use "tj" and "foobar")';
-      res.redirect('/login');
+      res.redirect('/');
     }
   });
 });
