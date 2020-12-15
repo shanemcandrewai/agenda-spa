@@ -8,6 +8,7 @@ const session = require('express-session')
  
 
 const app = express();
+app.use(express.static('public'))
 app.use(session({secret: 'keyboard cat', resave: false, saveUninitialized: false}));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -45,16 +46,17 @@ app.use(passport.session());
 // Define routes.
 app.get('/',
   function(req, res) {
-    res.render('home', { user: req.user });
+    res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
   });
 
 app.get('/login',
-  function(req, res){
-    res.render('login');
+  function(req, res) {
+    res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
   });
-  
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
+
+
+app.post('/', 
+  passport.authenticate('local', { failureRedirect: '/' }),
   function(req, res) {
     res.redirect('/');
   });
@@ -63,12 +65,6 @@ app.get('/logout',
   function(req, res){
     req.logout();
     res.redirect('/');
-  });
-
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', { user: req.user });
   });
 
 app.listen(PORT, () => console.log(`agenda-spa listening at http://localhost:${PORT}`))
