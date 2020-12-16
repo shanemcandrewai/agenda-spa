@@ -17,9 +17,18 @@ app.use(session({
   secret: 'shhhh, very secret'
 }));
 
+function findById(username, cb) {
+  return cb(null, {id: 1, username: 'sss', password: 'sss'})
+}
+
+function findByUsername(username, cb) {
+  return cb(null, {id: 1, username: 'sss', password: 'sss'})
+}
+
+
 passport.use(new Strategy(
   function(username, password, cb) {
-    db.users.findByUsername(username, function(err, user) {
+    findByUsername(username, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
       if (user.password != password) { return cb(null, false); }
@@ -32,7 +41,7 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
+  findById(id, function (err, user) {
     if (err) { return cb(err); }
     cb(null, user);
   });
@@ -55,11 +64,15 @@ app.get('/login',
   });
 
 
-app.post('/', 
-  passport.authenticate('local', { failureRedirect: '/' }),
-  function(req, res) {
-    res.redirect('/');
-  });
+//app.post('/', 
+//  passport.authenticate('local', { failureRedirect: '/login' }),
+//  function(req, res) {
+//    res.redirect('/');
+//  });
+
+app.post('/',
+  passport.authenticate('local', { successFlash: true, failureFlash: true })
+);
   
 app.get('/logout',
   function(req, res){
