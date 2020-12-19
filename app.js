@@ -13,6 +13,11 @@ app.use(session({ secret: 'keyboard cat',
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(function(req, res, next) {
+  console.log('handling request for: ', req.path, req.method);
+  next();
+});
+
 function findByUsername(username, cb){
   console.log('xxx findByUsername', username);
   return cb(null, { id: 1, username: 'sss', password: 'sss' })
@@ -31,17 +36,18 @@ passport.use(new Strategy(
       if (!user) { console.log('xxx no user'); return cb(null, false); }
       if (user.password != password) { console.log('xxx password mismatch');
 	return cb(null, false); }
+      console.log('xxx password match')
       return cb(null, user);
     });
   }));
 
 passport.serializeUser(function(user, cb) {
-  console.log('xxx ser', user);
+  console.log('xxx serializeUser', user);
   cb(null, user.id);
 });
 
 passport.deserializeUser(function(id, cb) {
-  console.log('xxx deser', id);
+  console.log('xxx deserializeUser', id);
   findById(id, function (err, user) {
     if (err) { return cb(err); }
     cb(null, user);
@@ -52,6 +58,7 @@ passport.deserializeUser(function(id, cb) {
 
 app.get('/', (req, res) => {
   console.log('xxx get root');
+  console.log('xxx req.user ', req.user);
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 })
 
