@@ -8,7 +8,8 @@ const port = process.env.PORT || 3000
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(session({ secret: 'keyboard cat',
+                  resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -24,9 +25,9 @@ function findById(id, cb){
 
 passport.use(new Strategy(
   function(username, password, cb) {
-  console.log('xxx passport.use ', username);
+    console.log('xxx passport.use ', username);
     findByUsername(username, function(err, user) {
-      if (err) { return cb(err); }
+      if (err) {console.log('xxx err'); return cb(err); }
       if (!user) { console.log('xxx no user'); return cb(null, false); }
       if (user.password != password) { console.log('xxx password mismatch');
 	return cb(null, false); }
@@ -57,7 +58,7 @@ app.get('/', (req, res) => {
 app.post('/', 
   passport.authenticate('local', { failureRedirect: '/' }),
   function(req, res) {
-    console.log('xxx post root');
+    console.log('xxx auth success');
     res.redirect('/');
   });
   
