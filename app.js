@@ -9,20 +9,22 @@ const app = express();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
-app.use(express.static('public'))
 app.use(passport.initialize());
 app.use(passport.session());
 
 function findByUsername(username, cb){
+  console.log('xxx findByUsername', username);
   return cb(null, { id: 1, username: 'sss', password: 'sss' })
 }
 
 function findById(id, cb){
+  console.log('xxx findById', id);
   return cb(null, { id: 1, username: 'sss', password: 'sss' })
 }
 
 passport.use(new Strategy(
   function(username, password, cb) {
+  console.log('xxx passport.use ', username);
     findByUsername(username, function(err, user) {
       if (err) { return cb(err); }
       if (!user) { console.log('xxx no user'); return cb(null, false); }
@@ -33,7 +35,7 @@ passport.use(new Strategy(
   }));
 
 passport.serializeUser(function(user, cb) {
-console.log('xxx ser', user);
+  console.log('xxx ser', user);
   cb(null, user.id);
 });
 
@@ -48,21 +50,25 @@ passport.deserializeUser(function(id, cb) {
 // Define routes.
 
 app.get('/', (req, res) => {
+  console.log('xxx get root');
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 })
 
 app.post('/', 
   passport.authenticate('local', { failureRedirect: '/' }),
   function(req, res) {
+    console.log('xxx post root');
     res.redirect('/');
   });
   
 app.get('/logout',
   function(req, res){
+    console.log('logout');
     req.logout();
     res.redirect('/');
   });
 
+app.use(express.static('public'))
 app.listen(port, () => {
   console.log(`agenda-spa app listening at http://localhost:${port}`)
 })
