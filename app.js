@@ -4,10 +4,12 @@ const Strategy = require('passport-local').Strategy;
 const path = require('path')
 const session = require('express-session')
 const sqlite3 = require('sqlite3').verbose();
+const bcrypt = require('bcrypt');
 
 const port = process.env.PORT || 3000
 const app = express();
 const db = new sqlite3.Database('nodelogin.db');
+const saltRounds = 12;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: 'keyboard cat',
@@ -23,8 +25,8 @@ app.use(function(req, res, next) {
 function findByUsername(username, cb){
   console.log('xxx findByUsername', username);
   db.serialize(function() {
-    db.each('select * from user where name = ?', username,
-      function(err, row) {console.log('zzz', row);
+    db.get('select * from user where name = ?', username,
+      function(err, row) {
         return cb(null, row);
       });
     });
@@ -33,8 +35,9 @@ function findByUsername(username, cb){
 function findById(id, cb){
   console.log('xxx findById', id);
   db.serialize(function() {
-    db.each('select * from user where id = ?', id,
-      function(err, row) {console.log('zzz', row);
+    db.get('select * from user where id = ?', id,
+      function(err, row) {
+	console.log('zzz', row);
         return cb(null, row);
       });
     });
@@ -46,8 +49,9 @@ passport.use(new Strategy(
     findByUsername(username, function(err, user) {
       if (err) {console.log('xxx err'); return cb(err); }
       if (!user) { console.log('xxx no user'); return cb(null, false); }
-      if (user.password != password) { console.log('xxx password mismatch');
-	return cb(null, false); }
+      bcrypt.compare(password, user.password).then(function(result)
+	{ if (!result) { console.log('xxx password mismatch');
+			return cb(null, false); }});
       console.log('xxx password match')
       return cb(null, user);
     });
