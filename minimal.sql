@@ -13,4 +13,5 @@ create table if not exists agenda(
 );
 
 insert or ignore into user(id, name, password) select 1, 'xxx', 'yyy';
+insert or ignore into user(id, name, password) select 2, 'sss', 'sss';
 insert or ignore into agenda(id, user_id, title, body) select 1, 1, 'aaa', 'bbb';

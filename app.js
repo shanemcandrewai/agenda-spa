@@ -3,9 +3,11 @@ const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
 const path = require('path')
 const session = require('express-session')
+const sqlite3 = require('sqlite3').verbose();
 
 const port = process.env.PORT || 3000
 const app = express();
+const db = new sqlite3.Database('nodelogin.db');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: 'keyboard cat',
@@ -20,12 +22,22 @@ app.use(function(req, res, next) {
 
 function findByUsername(username, cb){
   console.log('xxx findByUsername', username);
-  return cb(null, { id: 1, username: 'sss', password: 'sss' })
+  db.serialize(function() {
+    db.each('select * from user where name = ?', username,
+      function(err, row) {console.log('zzz', row);
+        return cb(null, row);
+      });
+    });
 }
 
 function findById(id, cb){
   console.log('xxx findById', id);
-  return cb(null, { id: 1, username: 'sss', password: 'sss' })
+  db.serialize(function() {
+    db.each('select * from user where id = ?', id,
+      function(err, row) {console.log('zzz', row);
+        return cb(null, row);
+      });
+    });
 }
 
 passport.use(new Strategy(
