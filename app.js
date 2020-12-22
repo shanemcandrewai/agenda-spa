@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-function findByUsername(username, cb){
+async function findByUsername(username, cb){
   console.log('xxx findByUsername', username);
   db.serialize(function() {
     db.get('select * from user where name = ?', username,
@@ -46,14 +46,15 @@ function findById(id, cb){
 passport.use(new Strategy(
   function(username, password, cb) {
     console.log('xxx passport.use ', username);
-    findByUsername(username, function(err, user) {
+    findByUsername(username, async function(err, user) {
       if (err) {console.log('xxx err'); return cb(err); }
       if (!user) { console.log('xxx no user'); return cb(null, false); }
-      bcrypt.compare(password, user.password).then(function(result)
-	{ if (!result) { console.log('xxx password mismatch');
-			return cb(null, false); }});
-      console.log('xxx password match')
-      return cb(null, user);
+      const match = await bcrypt.compare(password, user.password);
+      if (match) { console.log('xxx password match');
+		   return cb(null, user);
+		 };
+      console.log('xxx password mismatch')
+      return cb(null, false);
     });
   }));
 
