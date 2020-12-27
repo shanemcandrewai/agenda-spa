@@ -1,23 +1,22 @@
 const express = require('express');
 const passport = require('passport');
 const Strategy = require('passport-local').Strategy;
-const path = require('path')
-const session = require('express-session')
+const path = require('path');
+const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 const app = express();
 const db = new sqlite3.Database('nodelogin.db');
-const saltRounds = 12;
+//const saltRounds = 12;
 
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: 'keyboard cat',
-                  resave: false, saveUninitialized: false }));
+app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next) {
+app.use(function logRequest(req, res, next) {
   console.log('handling request for: ', req.path, req.method);
   next();
 });
@@ -29,7 +28,7 @@ async function findByUsername(username, cb){
       function(err, row) {
         return cb(null, row);
       });
-    });
+  });
 }
 
 function findById(id, cb){
@@ -37,10 +36,10 @@ function findById(id, cb){
   db.serialize(function() {
     db.get('select * from user where id = ?', id,
       function(err, row) {
-	console.log('zzz', row);
+        console.log('zzz', row);
         return cb(null, row);
       });
-    });
+  });
 }
 
 passport.use(new Strategy(
@@ -51,9 +50,9 @@ passport.use(new Strategy(
       if (!user) { console.log('xxx no user'); return cb(null, false); }
       const match = await bcrypt.compare(password, user.password);
       if (match) { console.log('xxx password match');
-		   return cb(null, user);
-		 };
-      console.log('xxx password mismatch')
+        return cb(null, user);
+      }
+      console.log('xxx password mismatch');
       return cb(null, false);
     });
   }));
@@ -77,7 +76,7 @@ app.get('/', (req, res) => {
   console.log('xxx get root');
   console.log('xxx req.user ', req.user);
   res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
-})
+});
 
 app.post('/', 
   passport.authenticate('local', { failureRedirect: '/' }),
@@ -93,7 +92,7 @@ app.get('/logout',
     res.redirect('/');
   });
 
-app.use(express.static('public'))
+app.use(express.static('public'));
 app.listen(port, () => {
-  console.log(`agenda-spa app listening at http://localhost:${port}`)
-})
+  console.log(`agenda-spa app listening at http://localhost:${port}`);
+});
