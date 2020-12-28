@@ -4,6 +4,7 @@ const Strategy = require('passport-local').Strategy;
 const path = require('path');
 const session = require('express-session');
 const sqlite3 = require('sqlite3').verbose();
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 
 const port = process.env.PORT || 3000;
@@ -12,7 +13,7 @@ const db = new sqlite3.Database('nodelogin.db');
 //const saltRounds = 12;
 
 app.use(express.urlencoded({ extended: true }));
-app.use(session({ secret: 'keyboard cat', resave: false,
+app.use(session({ secret: crypto.randomBytes(20).toString('hex'), resave: false,
   saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
