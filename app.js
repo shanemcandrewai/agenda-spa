@@ -23,7 +23,7 @@ app.use(function logRequest(req, res, next) {
   next();
 });
 
-async function findByUsername(username, cb){
+function findByUsername(username, cb){
   db.get('select * from user where name = ?', username,
     function returnResults(err, row) {
       return cb(null, row);

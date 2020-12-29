@@ -1,0 +1,11 @@
+db.getAsync = function getAsync(sql, parameter) {​​​​ // returns promise of <row>
+  return new Promise(function(resolve, reject) {​​​​
+    db.get(sql, parameter, function returnResultCallback(err, row) {​​​​
+      if (err) {​​​​
+        reject(err);
+        return;
+      }​​​​
+      resolve(row);
+    }​​​​);
+  }​​​​);
+}​​​​
