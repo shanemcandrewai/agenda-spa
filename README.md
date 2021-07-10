@@ -7,15 +7,17 @@
     sudo apt-get update
     sudo apt-get install git
 #### Node.js
+##### Windows
+###### [Download Windows Installer (.mis) 64-bit](https://nodejs.org/en/download/)
 ##### Linux
-##### [Download Linux Binaries (x64)](https://nodejs.org/en/download)
-##### [Unzip, install, set environmental variable and test installation](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux)
-##### Update ~/.profile
+###### [Download Linux Binaries (x64)](https://nodejs.org/en/download)
+###### [Unzip, install, set environmental variable and test installation](https://github.com/nodejs/help/wiki/Installation#how-to-install-nodejs-via-binary-archive-on-linux)
+###### Update ~/.profile
     # Nodejs
     VERSION=v14.15.1
     DISTRO=linux-x64
     export PATH=[install path]/node-$VERSION-$DISTRO/bin:$PATH
-##### Refresh profile
+###### Refresh profile
     . ~/.profile
 ### Agenda SPA
     git clone https://github.com/shanemcandrewai/agenda-spa.git
