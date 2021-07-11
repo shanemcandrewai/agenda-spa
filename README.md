@@ -47,3 +47,13 @@
     npx heroku git:remote -a agenda-spa
 ##### [Deploy code](https://devcenter.heroku.com/articles/git#deploying-code)
     git push heroku master
+##### [App URL](https://dashboard.heroku.com/apps/agenda-spa/settings)
+    https://agenda-spa.herokuapp.com/
+## Proposed features
+### data
+encrypted compressed JSON file
+### front end editor
+ace
+### functions
+#### pull, decript, decompress, open in editor
+#### save, compress, encrypt, push
